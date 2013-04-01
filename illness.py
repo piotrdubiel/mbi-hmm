@@ -1,4 +1,4 @@
-import model
+from hmm import model
 
 
 states = {'Healthy': 0.6, 'Fever': 0.4}
@@ -13,5 +13,12 @@ emissions = {
    'Healthy' : {'normal': 0.5, 'cold': 0.4, 'dizzy': 0.1},
    }
 
-hmm = model.HMM(states, emissions, transitions)
-hmm.states_for_sequence(['normal', 'cold', 'dizzy'])
+#hmm = model.HMM(states.keys(), ['normal', 'cold', 'dizzy'], [0.6, 0.4], emissions=[[0.5, 0.4, 0.1], [0.1, 0.3, 0.6]], transitions=[[0.6, 0.4], [0.3, 0.7]])
+hmm = model.HMM(states.keys(), ['normal', 'cold', 'dizzy'])
+
+seq = ['normal', 'cold', 'dizzy']
+#print hmm.states_for_sequence(['normal', 'cold', 'dizzy'])
+#print hmm.sequence_probability(['normal', 'cold', 'dizzy', 'dizzy'])
+#print hmm.viterbi(['normal', 'cold', 'dizzy'], states.keys(), states, transitions, emissions)
+
+hmm.train(10,seq)

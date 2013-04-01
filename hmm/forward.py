@@ -15,7 +15,7 @@ def alfa_pass(seq, P, A, B):
     for i, s in enumerate(seq[1:]):
         a.append([])
         a[-1] = [sum([a[i][state] * A[state][new_state] for state in range(N)]) * B[new_state][s] for new_state in range(N)]
- 
+
     return a
 
 seq = [1,1,1]

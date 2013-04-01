@@ -5,7 +5,7 @@ a = alfa_pass(seq, P, A, B)
 def beta_pass(a, seq, P, A, B):
     N = len(P)
     b = [[1.0 for _ in P]]
-    
+
     for i, s in enumerate(seq[-1:0:-1]):
         b.append([])
         b[-1] = [sum([A[state][new_state] * B[new_state][s] * b[-2][new_state] for new_state in range(N)]) for state in range(N)]
