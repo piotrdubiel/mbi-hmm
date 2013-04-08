@@ -17,14 +17,14 @@ class HMM():
             self.emissions = {state: {observation: emissions[i][j] for j, observation in enumerate(self.observations)}
                               for i, state in enumerate(self.states)}
         else:
-            self.emissions = {state: {observation: random.random() / len(self.observations) for j, observation in enumerate(self.observations)}
+            self.emissions = {state: {observation: 1.0 / len(self.observations) for j, observation in enumerate(self.observations)}
                               for i, state in enumerate(self.states)}
 
         if transitions:
             self.transitions = {current_state: {new_state: transitions[i][j] for j, new_state in enumerate(self.states)}
                                 for i, current_state in enumerate(self.states)}
         else:
-            self.transitions = {current_state: {new_state: random.random() / len(self.states) for j, new_state in enumerate(self.states)}
+            self.transitions = {current_state: {new_state: 1.0 / len(self.states) for j, new_state in enumerate(self.states)}
                                 for i, current_state in enumerate(self.states)}
 
     def states_for_sequence(self, sequence):
