@@ -17,17 +17,22 @@ for name in glob.glob('*'):
     print name
     if not os.path.isdir(name):
         f = open(name)
-        lines.append([])
-        if i > 100:
+        if i > 3:
             break
         i += 1
+        lines.append([])
         for line in f:
             lines[-1] += list(re.sub(not_allowed, '', line[15:].strip()))
+        f.close()
 
 print lines
-import pdb; pdb.set_trace() ### XXX BREAKPOINT
 
-for i in range(10):
+for i in range(1):
     print('ITERTION {}'.format(i))
     for line in lines:
         hmm.train(None, line)
+
+os.chdir('..')
+f = open('hmm', 'w')
+f.write(json.dumps(hmm.__dict__))
+f.close()
