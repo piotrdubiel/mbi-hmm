@@ -11,12 +11,23 @@ hmm = model.HMM(s, o)
 
 not_allowed = '[^{0}]'.format(''.join(o))
 os.chdir('corpus')
+lines = []
+i = 0
 for name in glob.glob('*'):
     print name
     if not os.path.isdir(name):
         f = open(name)
-        lines = []
+        lines.append([])
+        if i > 100:
+            break
+        i += 1
         for line in f:
-            lines.append(list(re.sub(not_allowed, '', line[15:].strip())))
-        import pdb; pdb.set_trace() ### XXX BREAKPOINT
-        hmm.train(10, *lines)
+            lines[-1] += list(re.sub(not_allowed, '', line[15:].strip()))
+
+print lines
+import pdb; pdb.set_trace() ### XXX BREAKPOINT
+
+for i in range(10):
+    print('ITERTION {}'.format(i))
+    for line in lines:
+        hmm.train(None, line)
