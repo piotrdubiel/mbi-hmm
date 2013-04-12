@@ -30,16 +30,17 @@ class HMM():
 
     def states_for_sequence(self, sequence):
         T = [{}]
-        T[0] = {state: log(p * self.emissions[state][sequence[0]]) for state, p in self.states.items()}
+        T[0] = {state: self._safe_log(p * self.emissions[state][sequence[0]]) for state, p in self.states.items()}
         path = {state: [state] for state in self.states}
-
+        print T
         for s in sequence[1:]:
             T.append({})
             new_path = {}
             for new_state in self.states:
                 T[-1][new_state], max_state = max([(T[-2][current_state]
-                                                   + log(self.transitions[current_state][new_state])
-                                                   + log(self.emissions[new_state][s]), current_state) for current_state in self.states])
+                                                   + self._safe_log(self.transitions[current_state][new_state])
+                                                   + self._safe_log(self.emissions[new_state][s]),
+                                                    current_state) for current_state in self.states])
                 new_path[new_state] = path[max_state] + [new_state]
 
             path = new_path
@@ -67,7 +68,7 @@ class HMM():
                                         for observation in self.observations}
                                 for state in self.states}
 
-            prob = -sum([log(x) for x in c])
+            prob = -sum([self._safe_log(x) for x in c])
             print(i, prob)
             if prob < last_prob:
                 last_prob = prob
@@ -85,6 +86,7 @@ class HMM():
             a[-1] = {new_state: sum([a[i][state] * self.transitions[state][new_state] for state in self.states]) * self.emissions[new_state][s] for new_state in self.states}
 
         return a
+
     def _alfa_pass(self, sequence):
         a = [{state: p * self.emissions[state][sequence[0]] for state, p in self.states.items()}]
         c = [sum(a[0].values())]
@@ -171,3 +173,9 @@ class HMM():
             g[-1] = {state: sum(G[-1][state].values()) for state in self.states}
 
         return g, G
+
+    def _safe_log(self, value):
+        if value != 0.0:
+            return log(value)
+        else:
+            return -sys.maxint
