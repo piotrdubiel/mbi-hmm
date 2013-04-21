@@ -32,7 +32,6 @@ class HMM():
         T = [{}]
         T[0] = {state: self._safe_log(p * self.emissions[state][sequence[0]]) for state, p in self.states.items()}
         path = {state: [state] for state in self.states}
-        print T
         for s in sequence[1:]:
             T.append({})
             new_path = {}

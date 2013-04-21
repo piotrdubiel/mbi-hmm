@@ -18,10 +18,10 @@ TRANSLATION_TABLE = {
 }
 
 def translate(sequence):
-    genes = to_genes_sequence(sequence)
-    return ' '.join([TRANSLATION_TABLE[g] for g in genes])
+    genes = to_gene_sequence(sequence)
+    return ''.join([TRANSLATION_TABLE[g] for g in genes])
 
-def to_genes_sequence(sequence):
+def to_gene_sequence(sequence):
     marker = 3
     genes = []
     while marker <= len(sequence):
