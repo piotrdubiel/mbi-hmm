@@ -1,5 +1,4 @@
 from hmm.model import HMM
-from collections import defaultdict
 from dna import utils
 import difflib
 
@@ -21,6 +20,7 @@ gene_count = {g: {h: 0.0 for h in states} for g in states}
 for i, g in enumerate(genes[:-1]):
     gene_count[g][genes[i+1]] += 1.0
 
+
 def normalize(value_dict):
     n = float(sum(value_dict.values()))
     return {k: v / n for k, v in value_dict.items()}
@@ -30,19 +30,19 @@ emissions = {g: {o: 1.0 if utils.translate(g) == o else 0.0 for o in obs} for g 
 hmm.emissions = emissions
 hmm.transitions = gene_count
 
-print len(dna)
 end = 21
 decoded = ''
 while end <= len(dna):
     amino_acids = utils.translate(dna[end-21:end])
     decoded += ''.join(hmm.states_for_sequence(amino_acids)[1])
-    
-    diff = difflib.SequenceMatcher(a=decoded[end-21:end], b=dna[end-21:end]) 
+    diff = difflib.SequenceMatcher(a=decoded[end-21:end], b=dna[end-21:end])
 
-    print '{0}% Done --- Quality: {1}'.format(end * 100.0 / len(dna), diff.ratio())
+    #print '{0}% Done --- Quality: {1}'.format(end * 100.0 / len(dna), diff.ratio())
     end += 21
 
 print len(decoded)
 print len(dna)
-diff = difflib.SequenceMatcher(a=decoded, b=dna) 
-print diff.ratio()
+
+for i, x in enumerate(decoded):
+    print decoded[i], dna[i], decoded[i]==dna[i]
+diff = difflib.SequenceMatcher(a=decoded, b=dna)
