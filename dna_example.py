@@ -12,7 +12,7 @@ for line in f:
 
 dna = dna[:9996]
 genes = utils.to_gene_sequence(dna)
-states = set(genes)
+states = list(set(genes))
 obs = set([utils.translate(g) for g in states])
 hmm = HMM(states, obs)
 gene_count = {g: {h: 0.0 for h in states} for g in states}
@@ -37,7 +37,7 @@ while end <= len(dna):
     decoded += ''.join(hmm.states_for_sequence(amino_acids)[1])
     diff = difflib.SequenceMatcher(a=decoded[end-21:end], b=dna[end-21:end])
 
-    #print '{0}% Done --- Quality: {1}'.format(end * 100.0 / len(dna), diff.ratio())
+    print '{0}% Done --- Quality: {1}'.format(end * 100.0 / len(dna), diff.ratio())
     end += 21
 
 print len(decoded)

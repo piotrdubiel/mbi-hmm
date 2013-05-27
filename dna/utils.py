@@ -17,17 +17,32 @@ TRANSLATION_TABLE = {
     'GTG': 'V',	'GCG': 'A',	'GAG': 'E',	'GGG': 'G'
 }
 
+
 def translate(sequence):
     genes = to_gene_sequence(sequence)
     return ''.join([TRANSLATION_TABLE[g] for g in genes])
+
 
 def to_gene_sequence(sequence):
     marker = 3
     genes = []
     while marker <= len(sequence):
-        genes.append(sequence[marker-3:marker].upper().replace('U', 'T')) # unify to DNA if RNA
+        genes.append(sequence[marker - 3:marker].upper().replace('U', 'T'))  # unify to DNA if RNA
         marker += 3
 
     return genes
 
 
+def prepare_subsequences(sequence, window_size):
+    return [sequence[i:i + window_size] for i in range(0, len(sequence), window_size)]
+
+
+def load(sequence_file):
+    sequence = ''
+    for line in sequence_file:
+        if line[0] == '>':
+            header = line.strip()
+        else:
+            sequence += line.strip()
+
+    return (header, sequence)
