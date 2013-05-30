@@ -1,38 +1,40 @@
 from math import log, exp
+from dna import utils
 import random
 import sys
 
 
 class HMM():
-    def __init__(self, states, observations, start=None, transitions=None, emissions=None):
+    def __init__(self, states, observations, transitions=None, emissions=None):
         random.seed()
 
-        if start:
-            self.states = {state: start[i] for i, state in enumerate(states)}
-        else:
+        if type(states) is dict:
+            self.states = states
+        elif type(states) is list:
             self.states = {state: 1.0 / len(states) for state in states}
+        else:
+            raise TypeError
 
-        self.observations = observations
+        self.observations = list(observations)
 
         if emissions:
-            self.emissions = {state: {observation: emissions[i][j] for j, observation in enumerate(self.observations)}
-                              for i, state in enumerate(self.states)}
+            self.emissions = {state: {observation: emissions[state][observation] for observation in self.observations}
+                              for state in self.states}
         else:
-            self.emissions = {state: {observation: 1.0 / len(self.observations) for j, observation in enumerate(self.observations)}
-                              for i, state in enumerate(self.states)}
+            self.emissions = {state: {observation: 1.0 / len(self.observations) for observation in self.observations}
+                              for state in self.states}
 
         if transitions:
-            self.transitions = {current_state: {new_state: transitions[i][j] for j, new_state in enumerate(self.states)}
-                                for i, current_state in enumerate(self.states)}
+            self.transitions = {current_state: {new_state: transitions[current_state][new_state] for new_state in self.states}
+                                for current_state in self.states}
         else:
-            self.transitions = {current_state: {new_state: 1.0 / len(self.states) for j, new_state in enumerate(self.states)}
-                                for i, current_state in enumerate(self.states)}
+            self.transitions = {current_state: {new_state: 1.0 / len(self.states) for new_state in self.states}
+                                for current_state in self.states}
 
     def states_for_sequence(self, sequence):
         T = [{}]
         T[0] = {state: self._safe_log(p * self.emissions[state][sequence[0]]) for state, p in self.states.items()}
         path = {state: [state] for state in self.states}
-        print T
         for s in sequence[1:]:
             T.append({})
             new_path = {}
@@ -179,3 +181,25 @@ class HMM():
             return log(value)
         else:
             return -sys.maxint
+
+def create_from_sequence(sequence):
+    states = list(set(sequence))
+    observations = list(set([utils.translate(g) for g in states]))
+
+    hmm = HMM(states, observations)
+
+    gene_count = {g: {h: 0.0 for h in states} for g in states}
+
+    for i, g in enumerate(sequence[:-1]):
+        gene_count[g][sequence[i+1]] += 1.0
+
+    def normalize(value_dict):
+        n = float(sum(value_dict.values()))
+        return {k: v / n for k, v in value_dict.items()}
+
+    gene_count = {k: normalize(v) for k, v in gene_count.items()}
+    emissions = {g: {o: 1.0 if utils.translate(g) == o else 0.0 for o in observations} for g in states}
+    hmm.emissions = emissions
+    hmm.transitions = gene_count
+
+    return hmm
