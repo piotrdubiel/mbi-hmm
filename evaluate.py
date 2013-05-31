@@ -3,7 +3,7 @@ from dna import utils
 import matplotlib.pyplot as plt
 import os
 
-RESULTS = {}
+RESULTS = ([], [])
 
 
 def compare(filename_a, filename_b):
@@ -32,15 +32,16 @@ def execute(window):
         cmd = 'python hmm_decoder.py -o {} coli.model {} test_aa.fasta'.format(output_file, window)
         print cmd
         call(cmd, shell=True)
-    RESULTS[window] = compare(output_file, 'test.fasta')
-    print(RESULTS[window])
+    RESULTS[0].append(window)
+    RESULTS[1].append(compare(output_file, 'test.fasta'))
+    print(RESULTS[1][-1])
 
 
 def graph():
     fig = plt.figure()
     ax = fig.add_subplot(111)
 
-    ax.plot(RESULTS.keys(), RESULTS.values())
+    ax.plot(RESULTS[0], RESULTS[1])
 
     plt.savefig('foo.png')
 
