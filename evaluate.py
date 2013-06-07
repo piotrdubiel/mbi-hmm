@@ -8,6 +8,7 @@ RESULTS = ([], [])
 if not os.path.isdir('decoded'):
     os.mkdir('decoded')
 
+
 def compare(filename_a, filename_b):
     a = open(filename_a)
     b = open(filename_b)
@@ -39,7 +40,7 @@ def graph():
 
     ax.plot(RESULTS[0], RESULTS[1])
 
-    plt.savefig('foo.png')
+    plt.savefig('graph.png')
 
 
 for window in range(1, 10):
