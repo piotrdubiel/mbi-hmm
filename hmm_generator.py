@@ -33,7 +33,7 @@ def validate(arguments):
 
 def process(sequence_file):
     header, sequence = utils.load(arguments['<fasta_sequence>'])
-    gene_sequence = utils.to_gene_sequence(sequence)
+    gene_sequence = utils.to_codon_sequence(sequence)
     hmm = create_from_sequence(gene_sequence)
     print(json.dumps({'header': header, 'model': hmm.__dict__}, sort_keys=True, indent=4, separators=(',', ': ')))
 
