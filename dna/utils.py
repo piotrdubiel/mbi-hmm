@@ -19,11 +19,11 @@ TRANSLATION_TABLE = {
 
 
 def translate(sequence):
-    genes = to_gene_sequence(sequence)
+    genes = to_codon_sequence(sequence)
     return ''.join([TRANSLATION_TABLE[g] for g in genes])
 
 
-def to_gene_sequence(sequence):
+def to_codon_sequence(sequence):
     marker = 3
     genes = []
     while marker <= len(sequence):
@@ -46,3 +46,14 @@ def load(sequence_file):
             sequence += line.strip()
 
     return (header, sequence)
+
+def compare(sequence_a, sequence_b):
+    equal = 0
+    codons_a = to_codon_sequence(sequence_a)
+    codons_b = to_codon_sequence(sequence_b)
+    length = min((len(codons_a), len(codons_b)))
+    for i in range(length):
+        if codons_a[i] == codons_b[i]:
+            equal += 1
+
+    return float(equal) / length
