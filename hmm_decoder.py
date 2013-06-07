@@ -51,7 +51,7 @@ def process(model_file, sequence_file, window_size):
 
     decoded = ''
     for seq in subsequences:
-        decoded += ''.join(hmm.states_for_sequence(seq)[1])
+        decoded += ''.join(hmm.decode(seq)[1])
         print('{} / {}'.format(len(decoded), 3 * len(sequence)), file=sys.stderr)
 
     lines = utils.prepare_subsequences(decoded, 80)

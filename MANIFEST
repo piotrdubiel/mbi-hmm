@@ -4,6 +4,5 @@ dna/__init__.py
 dna/dna_test.py
 dna/utils.py
 hmm/__init__.py
-hmm/backward.py
-hmm/forward.py
 hmm/model.py
+hmm/test.py
