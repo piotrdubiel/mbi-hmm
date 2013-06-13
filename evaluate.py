@@ -55,7 +55,8 @@ for window in range(10, 150, 10):
 for window in range(150, 500, 50):
     execute(window)
 
-for window in range(500, 1000, 100):
+for window in range(500, 2000, 100):
     execute(window)
+
 
 graph()
