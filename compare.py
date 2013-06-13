@@ -20,16 +20,7 @@ def process(filename_a, filename_b):
 
     _, sequence_b = utils.load(b)
     b.close()
-
-    equal = 0
-    length = min((len(sequence_a), len(sequence_b)))
-    for i in range(length):
-        if sequence_a[i] == sequence_b[i]:
-            equal += 1
-
-    print(equal)
-    print(float(equal) / length)
-
+    print(utils.compare(sequence_a, sequence_b))
 
 if __name__ == '__main__':
     arguments = docopt(__doc__, version='translate')

@@ -5,6 +5,9 @@ import os
 
 RESULTS = ([], [])
 
+if not os.path.isdir('decoded'):
+    os.mkdir('decoded')
+
 
 def compare(filename_a, filename_b):
     a = open(filename_a)
@@ -16,13 +19,7 @@ def compare(filename_a, filename_b):
     _, sequence_b = utils.load(b)
     b.close()
 
-    equal = 0
-    length = min((len(sequence_a), len(sequence_b)))
-    for i in range(length):
-        if sequence_a[i] == sequence_b[i]:
-            equal += 1
-
-    return float(equal) / length
+    return utils.compare(sequence_a, sequence_b)
 
 
 def execute(window):
@@ -43,7 +40,7 @@ def graph():
 
     ax.plot(RESULTS[0], RESULTS[1])
 
-    plt.savefig('foo.png')
+    plt.savefig('graph.png')
 
 
 for window in range(1, 10):
