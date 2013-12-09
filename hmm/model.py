@@ -54,17 +54,23 @@ class HMM():
             return -sys.maxint
 
     def prefix(self, sequence):
-        T = [{state: self._safe_log(p * self.emissions[state][sequence[0]]) for state, p in self.states.items()}]
+        T = [{state: p * self.emissions[state][sequence[0]] for state, p in self.states.items()}]
         for s in sequence[1:]:
             T.append({})
             for current_state in self.states:
-                T[-1][current_state] = self._safe_log(self.emissions[current_state][s]) * sum([T[-2][prev_state] * self._safe_log(self.transitions[prev_state][current_state]) for prev_state in self.states])
+                T[-1][current_state] = self.emissions[current_state][s] * sum(T[-2][prev_state] * self.transitions[prev_state][current_state] for prev_state in self.states)
 
         return T
 
     def suffix(self, sequence):
         T = [{state: 1.0 for state in self.states}]
 
+        for s in sequence[-1:0:-1]:
+            T.append({})
+            for current_state in self.states:
+                T[-1][current_state] = sum(self.transitions[current_state][next_state] * self.emissions[next_state][s] * T[-2][next_state] for next_state in self.states)
+
+        T.reverse()
         return T
 
 

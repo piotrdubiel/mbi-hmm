@@ -13,5 +13,6 @@ emissions = {
    'Sunny' : {'walk': 0.6, 'shop': 0.3, 'clean': 0.1},
    }
 
-hmm = model.HMM(states, emissions, transitions)
-hmm.states_for_sequence(['clean', 'walk', 'walk'])
+hmm = model.HMM(states, ['clean', 'walk', 'walk'], transitions, emissions)
+print hmm.prefix(['clean', 'walk', 'walk'])
+print hmm.suffix(['clean', 'walk', 'walk'])
