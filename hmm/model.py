@@ -73,6 +73,45 @@ class HMM():
         T.reverse()
         return T
 
+    def train(self, sequence):
+        alpha = self.prefix(sequence)
+        beta = self.suffix(sequence)
+
+        g = []
+        G = []
+
+        P = sum(alpha[-1].values())
+        N = len(sequence)
+
+        g = [{state: alpha[i][state] * beta[i][state] / P for state in self.states} for i in range(N)]
+        for i in range(N - 1):
+            G.append({old_state:
+                      {new_state:
+                       alpha[i][old_state]
+                       * self.transitions[old_state][new_state]
+                       * self.emissions[new_state][sequence[i]]
+                       * beta[i + 1][new_state]
+                       / P for new_state in self.states}
+                      for old_state in self.states})
+
+
+        self.states = {state: g[0][state] for state in self.states}
+
+        print self.transitions
+        self.transitions = {old_state: {new_state: reduce(lambda x, y: x + y[old_state][new_state], G, 0.0) / reduce(lambda x, y: x + y[old_state], g, 0.0) for new_state in self.states} for old_state in self.states}
+
+        for x, y in self.transitions.items():
+            N = sum(y.values())
+            for k, v in y.items():
+                y[k] = v / N
+
+        print self.transitions
+        self.emissions = {state:
+                          {observation: 0 for observation in self.observations}
+                          for state in self.states}
+        return g, G
+
+
 
 def create_from_sequence(sequence):
     states = list(set(sequence))

@@ -10,8 +10,9 @@ emissions = {'U': {'1': 0.167, '2': 0.167, '3': 0.167, '4': 0.167, '5': 0.167, '
 hmm = model.HMM(states, observations, transitions, emissions)
 
 seq = ['6', '1', '6', '6', '5', '6', '2', '1', '5', '1', '3', '4']
-print hmm.prefix(seq)
-for i, a in enumerate(hmm.suffix(seq)):
-    print a, seq[i]
+p = hmm.prefix(seq)
+
+g, G = hmm.train(seq)
+
 
 # >>> 0.0001096449669352258 * 0.95 * 0.167 + 3.0418475024501612e-05 * 0.05 * 0.1
